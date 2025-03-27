@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from model import InsurancePolicyAnalyzer
 import tempfile
@@ -11,8 +12,24 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
 # Initialize the analyzer
 analyzer = InsurancePolicyAnalyzer()
+
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint for Render
+    """
+    return {"status": "healthy"}
 
 @app.post("/analyze-policy/")
 async def analyze_policy(file: UploadFile = File(...)):
@@ -74,9 +91,11 @@ async def root():
         "version": "1.0.0",
         "endpoints": {
             "/analyze-policy/": "POST - Upload and analyze a PDF insurance policy",
+            "/health": "GET - Health check endpoint",
             "/": "GET - This information"
         }
     }
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port) 
