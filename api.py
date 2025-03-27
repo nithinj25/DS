@@ -5,6 +5,11 @@ import uvicorn
 from model import InsurancePolicyAnalyzer
 import tempfile
 import os
+import nltk
+
+# Download required NLTK data
+nltk.download('punkt')
+nltk.download('stopwords')
 
 app = FastAPI(
     title="Insurance Policy Analyzer API",

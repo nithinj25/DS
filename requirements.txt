@@ -8,4 +8,6 @@ pandas==2.2.0
 pillow==10.4.0
 pymupdf==1.23.8
 opencv-python==4.11.0.86
-pdf2image==1.17.0 
+pdf2image==1.17.0
+nltk==3.8.1
+python-magic==0.4.27 
